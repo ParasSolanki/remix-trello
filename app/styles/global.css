@@ -1,0 +1,156 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --font-inter: "Inter var", "Inter var Fallback", theme("fontFamily.sans");
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
+
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+@layer base {
+  @font-face {
+    font-family: "Inter var";
+    font-weight: 100 900;
+    font-display: block;
+    font-style: normal;
+    font-named-instance: "Regular";
+    src: url("/fonts/Inter-roman-latin.var.woff2") format("woff2");
+  }
+
+  @font-face {
+    font-family: "Inter var";
+    font-weight: 100 900;
+    font-display: block;
+    font-style: italic;
+    font-named-instance: "Italic";
+    src: url("/fonts/Inter-italic-latin.var.woff2") format("woff2");
+  }
+
+  /* Font metric overrides reduces CLS from font-swap. */
+  /* Inspired from @kentcdodds EpicWeb Stack https://github.com/epicweb-dev/epic-stack/blob/main/app/styles/font.css#L183 */
+  /* npx fontpie ./public/fonts/Inter-roman-latin.var.woff2 -weight 400 -style normal  */
+  @font-face {
+    font-family: "Inter var Fallback";
+    font-style: normal;
+    font-weight: 100 900;
+    src: local("Arial");
+    ascent-override: 90%;
+    descent-override: 22.43%;
+    line-gap-override: 0%;
+    size-adjust: 107.64%;
+  }
+
+  /* npx fontpie ./public/fonts/Inter-italic-latin.var.woff2 -weight 400 -style italic  */
+  @font-face {
+    font-family: "Inter var Fallback";
+    font-style: italic;
+    font-weight: 100 900;
+    src: local("Arial Italic");
+    ascent-override: 89.96%;
+    descent-override: 22.42%;
+    line-gap-override: 0%;
+    size-adjust: 107.68%;
+  }
+}
+
+.no-transitions * {
+  transition: none;
+  animation: none;
+}
+
+.bg-grid {
+  background-size: 100px 100px;
+  z-index: -2;
+  background-image: url(../assets/images/bg-grid.png);
+  background-position-y: -9px;
+  opacity: 0.05;
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent,
+    1%,
+    white,
+    99%,
+    transparent
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent,
+    1%,
+    white,
+    99%,
+    transparent
+  );
+}
+
+.dark .bg-grid {
+  opacity: 0.9;
+}
