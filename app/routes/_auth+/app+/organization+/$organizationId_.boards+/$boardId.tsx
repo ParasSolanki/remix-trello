@@ -47,7 +47,7 @@ export default function BoardsPage() {
 
   return (
     <ScrollArea
-      className="container relative mx-auto bg-cover bg-center bg-no-repeat px-4 py-6 after:absolute after:inset-0 after:-z-[-1] after:bg-black after:opacity-10"
+      className="container relative mx-auto bg-primary bg-cover bg-center bg-no-repeat px-4 py-6 after:absolute after:inset-0 after:-z-[-1] after:bg-black after:opacity-10"
       style={{
         height: "calc(100vh - 5rem)",
         backgroundImage: board.bannerImageUrl

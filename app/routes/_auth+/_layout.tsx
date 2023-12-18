@@ -25,7 +25,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   return json({ user, organizations } as const);
 }
 
-export default function AppLayout() {
+export default function AuthLayout() {
   const { user, organizations } = useLoaderData<typeof loader>();
 
   return (

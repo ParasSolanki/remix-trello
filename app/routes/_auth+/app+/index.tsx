@@ -240,7 +240,7 @@ export default function AppPage() {
   const { user, organizations } = useLoaderData<typeof loader>();
 
   return (
-    <main className="mx-auto max-w-4xl space-y-6 px-4 py-12">
+    <div className="mx-auto max-w-4xl space-y-6 px-4 py-12">
       <TypographyH1 className="text-primary">
         Welcome {user.displayName ?? "Back"},
       </TypographyH1>
@@ -292,6 +292,6 @@ export default function AppPage() {
           </ul>
         )}
       </section>
-    </main>
+    </div>
   );
 }

@@ -5,6 +5,7 @@ import {
   HomeIcon,
   LogOutIcon,
   PlusCircleIcon,
+  SettingsIcon,
   User2Icon,
 } from "lucide-react";
 import { useMemo } from "react";
@@ -94,6 +95,12 @@ export function UserMenu({
             Home
           </Link>
         </DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <Link to="/account" className="inline-flex w-full items-center">
+            <SettingsIcon className="mr-2 h-4 w-4" />
+            Settings
+          </Link>
+        </DropdownMenuItem>
         <DropdownMenuSub>
           <DropdownMenuSubTrigger className="inline-flex w-full items-center">
             <Building2Icon className="mr-2 h-4 w-4" />
@@ -135,7 +142,6 @@ export function UserMenu({
             </DropdownMenuSubContent>
           </DropdownMenuPortal>
         </DropdownMenuSub>
-
         <DropdownMenuSeparator />
         <DropdownMenuItem className="text-red-500 hover:cursor-pointer hover:bg-red-600 hover:text-white focus:bg-red-600 focus:text-white">
           <Form action="/logout" method="POST">
