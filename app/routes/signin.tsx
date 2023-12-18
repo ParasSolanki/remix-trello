@@ -191,7 +191,7 @@ function SignInForm() {
 export default function SignInPage() {
   return (
     <main className="flex h-screen">
-      <div className="hidden h-screen w-6/12 bg-twitter lg:block">
+      <div className="hidden h-screen w-6/12 bg-primary lg:block">
         <div className="mx-auto mt-20 max-w-xl px-2">
           <h1 className="px-2 text-5xl font-bold tracking-tight text-white">
             Welcome,

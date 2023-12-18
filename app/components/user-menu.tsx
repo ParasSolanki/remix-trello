@@ -1,5 +1,14 @@
 import { Form, Link } from "@remix-run/react";
-import { Building2Icon, HomeIcon, LogOut, User2Icon } from "lucide-react";
+import {
+  Building2Icon,
+  HomeIcon,
+  LogOutIcon,
+  PlusCircleIcon,
+  User2Icon,
+} from "lucide-react";
+import { useMemo } from "react";
+import { AuthenticityTokenInput } from "remix-utils/csrf/react";
+import { type SessionUser } from "~/server/user.server";
 import { Avatar, AvatarFallback } from "./ui/avatar";
 import { Button } from "./ui/button";
 import {
@@ -7,13 +16,13 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuPortal,
   DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-import { AuthenticityTokenInput } from "remix-utils/csrf/react";
-
-import { type SessionUser } from "~/server/user.server";
-import { useMemo } from "react";
 
 export function UserMenu({ user }: { user: SessionUser }) {
   const userInitials = useMemo(() => {
@@ -55,18 +64,33 @@ export function UserMenu({ user }: { user: SessionUser }) {
             Home
           </Link>
         </DropdownMenuItem>
-        <DropdownMenuItem asChild>
-          <Link to="/app" className="inline-flex w-full items-center">
+        <DropdownMenuSub>
+          <DropdownMenuSubTrigger className="inline-flex w-full items-center">
             <Building2Icon className="mr-2 h-4 w-4" />
             Organizations
-          </Link>
-        </DropdownMenuItem>
+          </DropdownMenuSubTrigger>
+          <DropdownMenuPortal>
+            <DropdownMenuSubContent>
+              <DropdownMenuItem>
+                <span>Email</span>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem asChild>
+                <Link to="/app">
+                  <PlusCircleIcon className="mr-2 h-4 w-4" />
+                  <span>Create Oragnization</span>
+                </Link>
+              </DropdownMenuItem>
+            </DropdownMenuSubContent>
+          </DropdownMenuPortal>
+        </DropdownMenuSub>
+
         <DropdownMenuSeparator />
         <DropdownMenuItem className="text-red-500 hover:cursor-pointer hover:bg-red-600 hover:text-white focus:bg-red-600 focus:text-white">
           <Form action="/logout" method="POST">
             <AuthenticityTokenInput />
             <button type="submit" className="flex items-center">
-              <LogOut className="mr-2 h-4 w-4" />
+              <LogOutIcon className="mr-2 h-4 w-4" />
               Log out
             </button>
           </Form>

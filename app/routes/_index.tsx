@@ -40,6 +40,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
 export default function Index() {
   const { user } = useLoaderData<typeof loader>();
+
   return (
     <main className="flex h-screen flex-col overflow-hidden">
       <header className=" flex h-20 items-center border-b border-primary/20">
@@ -75,7 +76,7 @@ export default function Index() {
             accomplish it all with Remix Trello.
           </TypographyP>
           <Link
-            to="/signin"
+            to={user ? "/app" : "/signin"}
             className={cn(buttonVariants({ size: "lg" }), "text-lg")}
           >
             Get Started
@@ -92,16 +93,16 @@ export default function Index() {
 
             <div className="grid grid-cols-2 divide-x text-center">
               <Link
-                to="/privacy-policy"
+                to="/privacy"
                 className="hover:text-slate-600 focus:text-slate-600"
               >
                 Privacy Policy
               </Link>
               <Link
-                to="/terms-condition"
+                to="/terms"
                 className="pl-4 hover:text-slate-600 focus:text-slate-600"
               >
-                Terms &amp; Condition
+                Terms of Service
               </Link>
             </div>
           </nav>

@@ -2,10 +2,10 @@ import { conform, useForm } from "@conform-to/react";
 import { getFieldsetConstraint, parse } from "@conform-to/zod";
 import {
   json,
-  type DataFunctionArgs,
   type MetaFunction,
   redirect,
   type LoaderFunctionArgs,
+  type ActionFunctionArgs,
 } from "@remix-run/node";
 import { Link, useActionData } from "@remix-run/react";
 import { LuciaError } from "lucia";
@@ -25,6 +25,7 @@ import {
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import { PasswordInput } from "~/components/ui/password-input";
+import { TypographyMuted, TypographyP } from "~/components/ui/typography";
 import { useIsSubmitting } from "~/hooks/use-is-submitting";
 import { validateCSRF } from "~/utils/csrf.server";
 
@@ -50,7 +51,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   return json({});
 }
 
-export async function action({ request }: DataFunctionArgs) {
+export async function action({ request }: ActionFunctionArgs) {
   if (request.method !== "POST")
     return new Response("Method not allowed", { status: 405 });
 
@@ -203,7 +204,7 @@ function SignUpForm() {
 export default function SignUpPage() {
   return (
     <main className="flex h-screen">
-      <div className="hidden h-screen w-6/12 bg-twitter lg:block">
+      <div className="hidden h-screen w-6/12 bg-primary lg:block">
         <div className="mx-auto mt-20 max-w-xl px-2">
           <h1 className="px-2 text-5xl font-bold tracking-tight text-white">
             Create New Account,
@@ -217,7 +218,7 @@ export default function SignUpPage() {
             <h3 className="text-4xl font-bold text-foreground">Sign Up</h3>
             <SignUpForm />
 
-            <p className="mt-4 font-medium text-muted-foreground">
+            <TypographyP className="mt-4 font-medium text-muted-foreground">
               Already have an account?{" "}
               <Link
                 to="/signin"
@@ -225,7 +226,24 @@ export default function SignUpPage() {
               >
                 Sign In
               </Link>
-            </p>
+            </TypographyP>
+            <TypographyMuted>
+              By clicking continue, you agree to our{" "}
+              <Link
+                to="/terms"
+                className="underline hover:text-primary focus:text-primary "
+              >
+                Terms of Service
+              </Link>{" "}
+              and{" "}
+              <Link
+                to="/privacy"
+                className="underline hover:text-primary focus:text-primary "
+              >
+                Privacy Policy
+              </Link>
+              .
+            </TypographyMuted>
           </div>
         </div>
       </div>
