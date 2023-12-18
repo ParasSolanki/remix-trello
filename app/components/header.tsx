@@ -1,8 +1,6 @@
 import { Link } from "@remix-run/react";
-import { UserMenu } from "./user-menu";
-import { type SessionUser } from "~/server/user.server";
 
-export function Header({ user }: { user: SessionUser }) {
+export function Header({ children }: React.PropsWithChildren<{}>) {
   return (
     <header className="flex h-20 items-center border-b border-primary/60">
       <div className="container mx-auto px-4">
@@ -10,7 +8,7 @@ export function Header({ user }: { user: SessionUser }) {
           <Link to="/" className="text-2xl font-bold text-slate-900">
             Remix Trello
           </Link>
-          <UserMenu user={user} />
+          {children}
         </nav>
       </div>
     </header>

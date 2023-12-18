@@ -5,10 +5,12 @@ import {
 } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
 import { auth } from "~/auth/lucia.server";
+import { Header } from "~/components/header";
 import { buttonVariants } from "~/components/ui/button";
 import { TypographyH1, TypographyP } from "~/components/ui/typography";
 import { UserMenu } from "~/components/user-menu";
 import { cn } from "~/lib/utils";
+import { getUserOrganizations } from "~/server/organization.server";
 import { getSessionUser } from "~/server/user.server";
 import { logout } from "~/utils/auth.server";
 
@@ -28,6 +30,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   if (session) {
     const { data, error } = await getSessionUser(session.user.userId);
+
     if (error) {
       return await logout(session.sessionId);
     }
@@ -35,37 +38,32 @@ export async function loader({ request }: LoaderFunctionArgs) {
     user = data;
   }
 
-  return json({ user } as const);
+  const organizations = await getUserOrganizations(session.user.userId);
+
+  return json({ user, organizations } as const);
 }
 
 export default function Index() {
-  const { user } = useLoaderData<typeof loader>();
+  const { user, organizations } = useLoaderData<typeof loader>();
 
   return (
     <main className="flex h-screen flex-col overflow-hidden">
-      <header className=" flex h-20 items-center border-b border-primary/20">
-        <div className="container mx-auto px-4">
-          <nav className="flex items-center justify-between">
-            <Link to="/" className="text-2xl font-bold text-slate-900">
-              Remix Trello
+      <Header>
+        {user && <UserMenu user={user} organizations={organizations} />}
+        {!user && (
+          <div className="flex space-x-3">
+            <Link
+              to="/signin"
+              className={cn(buttonVariants({ variant: "outline" }))}
+            >
+              Login
             </Link>
-            {user && <UserMenu user={user} />}
-            {!user && (
-              <div className="flex space-x-3">
-                <Link
-                  to="/signin"
-                  className={cn(buttonVariants({ variant: "outline" }))}
-                >
-                  Login
-                </Link>
-                <Link to="/signup" className={cn(buttonVariants())}>
-                  Signup
-                </Link>
-              </div>
-            )}
-          </nav>
-        </div>
-      </header>
+            <Link to="/signup" className={cn(buttonVariants())}>
+              Signup
+            </Link>
+          </div>
+        )}
+      </Header>
 
       <section className="flex flex-grow items-center">
         <div className="mx-auto max-w-3xl space-y-4 px-4 text-center">

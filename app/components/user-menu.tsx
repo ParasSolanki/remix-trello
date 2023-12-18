@@ -1,6 +1,7 @@
 import { Form, Link } from "@remix-run/react";
 import {
   Building2Icon,
+  BuildingIcon,
   HomeIcon,
   LogOutIcon,
   PlusCircleIcon,
@@ -23,8 +24,24 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
+import { TypographyMuted, TypographySmall } from "./ui/typography";
 
-export function UserMenu({ user }: { user: SessionUser }) {
+type Organizations = {
+  id: string | null;
+  name: string | null;
+  slug: string | null;
+  logoUrl: string | null;
+  ownderId: string | null;
+  role: string | null;
+};
+
+export function UserMenu({
+  user,
+  organizations,
+}: {
+  user: SessionUser;
+  organizations?: Organizations[];
+}) {
   const userInitials = useMemo(() => {
     if (!user.displayName) return undefined;
 
@@ -34,6 +51,19 @@ export function UserMenu({ user }: { user: SessionUser }) {
       splited[1] ? splited[1].charAt(0).toUpperCase() : ""
     }`;
   }, [user.displayName]);
+
+  const orgs = useMemo(() => {
+    return organizations?.map((o) => {
+      let userRole = o.role;
+
+      if (user.id === o.ownderId) userRole = "Personal Workspace";
+
+      return {
+        ...o,
+        userRole,
+      };
+    });
+  }, [organizations, user.id]);
 
   return (
     <DropdownMenu>
@@ -71,10 +101,31 @@ export function UserMenu({ user }: { user: SessionUser }) {
           </DropdownMenuSubTrigger>
           <DropdownMenuPortal>
             <DropdownMenuSubContent>
-              <DropdownMenuItem>
-                <span>Email</span>
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
+              {Array.isArray(orgs) &&
+                !!orgs.length &&
+                orgs.map((o) => (
+                  <DropdownMenuItem
+                    key={o.id}
+                    asChild
+                    className="flex items-start"
+                  >
+                    <Link to={`/app/organization/${o.id}`}>
+                      {!o.logoUrl && (
+                        <BuildingIcon className="mr-2 mt-1 h-4 w-4" />
+                      )}
+                      <span className="flex flex-col space-y-0.5">
+                        <TypographySmall>{o.name}</TypographySmall>
+
+                        <TypographyMuted className="text-xs uppercase">
+                          {o.userRole}
+                        </TypographyMuted>
+                      </span>
+                    </Link>
+                  </DropdownMenuItem>
+                ))}
+              {Array.isArray(orgs) && !!orgs.length && (
+                <DropdownMenuSeparator />
+              )}
               <DropdownMenuItem asChild>
                 <Link to="/app">
                   <PlusCircleIcon className="mr-2 h-4 w-4" />

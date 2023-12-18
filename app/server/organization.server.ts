@@ -7,6 +7,33 @@ import {
   users,
 } from "../db/schema";
 
+export async function getUserOrganizations(userId: string) {
+  const orgs = await db
+    .select({
+      id: organizations.id,
+      name: organizations.name,
+      slug: organizations.slug,
+      logoUrl: organizations.logoUrl,
+      ownderId: organizations.ownerId,
+      role: organizationRoles.name,
+    })
+    .from(organizationMembers)
+    .leftJoin(
+      organizationRoles,
+      eq(organizationRoles.organizationId, organizationMembers.organizationId),
+    )
+    .leftJoin(
+      organizations,
+      eq(organizations.id, organizationMembers.organizationId),
+    )
+    .where(eq(organizationMembers.memberId, userId))
+    .limit(5)
+    .groupBy(organizations.id)
+    .orderBy(desc(organizations.createdAt));
+
+  return orgs;
+}
+
 export async function createOrganization({
   name,
   slug,

@@ -2,6 +2,8 @@ import { json, redirect, type LoaderFunctionArgs } from "@remix-run/node";
 import { Outlet, useLoaderData } from "@remix-run/react";
 import { auth } from "~/auth/lucia.server";
 import { Header } from "~/components/header";
+import { UserMenu } from "~/components/user-menu";
+import { getUserOrganizations } from "~/server/organization.server";
 import { getSessionUser } from "~/server/user.server";
 import { logout } from "~/utils/auth.server";
 
@@ -18,15 +20,19 @@ export async function loader({ request }: LoaderFunctionArgs) {
     return await logout(session.sessionId);
   }
 
-  return json({ user } as const);
+  const organizations = await getUserOrganizations(session.user.userId);
+
+  return json({ user, organizations } as const);
 }
 
 export default function AppLayout() {
-  const { user } = useLoaderData<typeof loader>();
+  const { user, organizations } = useLoaderData<typeof loader>();
 
   return (
     <>
-      <Header user={user} />
+      <Header>
+        <UserMenu user={user} organizations={organizations} />
+      </Header>
       <Outlet />
     </>
   );
