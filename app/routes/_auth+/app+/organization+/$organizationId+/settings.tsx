@@ -5,6 +5,13 @@ import { Separator } from "~/components/ui/separator";
 import { TypographyH3, TypographyMuted } from "~/components/ui/typography";
 import { getSessionUser } from "~/server/user.server";
 import { logout } from "~/utils/auth.server";
+import {
+  organizations,
+  organizationMembers,
+  organizationRoles,
+} from "~/db/schema";
+import { and, eq } from "drizzle-orm";
+import { db } from "~/db";
 
 export const meta: MetaFunction = () => {
   return [
@@ -13,7 +20,7 @@ export const meta: MetaFunction = () => {
   ];
 };
 
-export async function loader({ request }: LoaderFunctionArgs) {
+export async function loader({ request, params }: LoaderFunctionArgs) {
   const authRequest = await auth.handleRequest(request);
 
   const session = await authRequest.validate();
@@ -26,7 +33,56 @@ export async function loader({ request }: LoaderFunctionArgs) {
     return await logout(session.sessionId);
   }
 
-  // TODO: only admin can view this page
+  if (!params.organizationId) {
+    throw new Response(null, {
+      status: 404,
+      statusText: "Not Found",
+    });
+  }
+
+  // user should be member of the organization
+  const [org] = await db
+    .select({
+      ownderId: organizations.ownerId,
+      userRole: organizationRoles.name,
+    })
+    .from(organizations)
+    .leftJoin(
+      organizationMembers,
+      eq(organizationMembers.organizationId, organizations.id),
+    )
+    .leftJoin(
+      organizationRoles,
+      and(
+        eq(organizationRoles.organizationId, organizations.id),
+        eq(organizationRoles.id, organizationMembers.memberRoleId),
+      ),
+    )
+    .where(
+      and(
+        eq(organizations.id, params.organizationId),
+        eq(organizationMembers.memberId, session.user.userId),
+      ),
+    )
+    .groupBy(organizations.id)
+    .limit(1);
+
+  if (!org) {
+    throw new Response(null, {
+      status: 404,
+      statusText: "Not Found",
+    });
+  }
+
+  const canViewSettings = org.userRole && org.userRole === "ADMIN";
+
+  if (!canViewSettings) {
+    throw new Response(null, {
+      status: 401,
+      statusText: "Unauthorized",
+    });
+  }
+
   return {};
 }
 
