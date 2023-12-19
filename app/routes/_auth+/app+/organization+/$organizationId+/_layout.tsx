@@ -1,8 +1,18 @@
 import { json, redirect, type LoaderFunctionArgs } from "@remix-run/node";
 import { Link, Outlet, useLoaderData, useLocation } from "@remix-run/react";
 import { eq } from "drizzle-orm";
-import { ActivityIcon, LayoutIcon, SettingsIcon } from "lucide-react";
+import {
+  ActivityIcon,
+  BuildingIcon,
+  LayoutIcon,
+  SettingsIcon,
+} from "lucide-react";
 import { auth } from "~/auth/lucia.server";
+import {
+  Breadcrumb,
+  BreadcrumbLink,
+  Breadcrumbs,
+} from "~/components/ui/breadcrumbs";
 import { buttonVariants } from "~/components/ui/button";
 import { Separator } from "~/components/ui/separator";
 import { TypographyH2, TypographyMuted } from "~/components/ui/typography";
@@ -63,6 +73,18 @@ export default function OrganizationLayout() {
 
   return (
     <main className="mx-auto max-w-6xl space-y-6 px-4 py-12">
+      <Breadcrumbs>
+        <Breadcrumb>
+          <BreadcrumbLink>
+            <BuildingIcon className="mr-2 h-4 w-4" />
+            <Link to="/app">Organizations</Link>
+          </BreadcrumbLink>
+        </Breadcrumb>
+        <Breadcrumb>
+          <BreadcrumbLink isCurrent>{organization.name}</BreadcrumbLink>
+        </Breadcrumb>
+      </Breadcrumbs>
+
       <div className="space-y-1">
         <TypographyH2 className="capitalize text-primary">
           {organization.name}

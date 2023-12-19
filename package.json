@@ -44,6 +44,7 @@
     "mysql2": "^3.6.5",
     "nprogress": "^0.2.0",
     "react": "^18.2.0",
+    "react-aria-components": "1.0.0-rc.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.48.2",
     "remix-utils": "^7.1.0",
