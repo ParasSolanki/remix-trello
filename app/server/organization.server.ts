@@ -17,19 +17,22 @@ export async function getUserOrganizations(userId: string) {
       ownderId: organizations.ownerId,
       role: organizationRoles.name,
     })
-    .from(organizationMembers)
+    .from(organizations)
     .leftJoin(
       organizationRoles,
-      eq(organizationRoles.organizationId, organizationMembers.organizationId),
+      eq(organizationRoles.organizationId, organizations.id),
     )
     .leftJoin(
-      organizations,
-      eq(organizations.id, organizationMembers.organizationId),
+      organizationMembers,
+      and(
+        eq(organizationMembers.organizationId, organizations.id),
+        eq(organizationMembers.memberRoleId, organizationRoles.id),
+      ),
     )
     .where(eq(organizationMembers.memberId, userId))
-    .limit(5)
     .groupBy(organizations.id)
-    .orderBy(desc(organizations.createdAt));
+    .orderBy(desc(organizations.createdAt))
+    .limit(5);
 
   return orgs;
 }
